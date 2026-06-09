@@ -61,6 +61,14 @@ public class ConsistentHashingStrategy implements LoadBalancingStrategy {
 
     private String getRequestKey(ServerWebExchange exchange) {
 
+        String userId = exchange.getRequest()
+                .getHeaders()
+                .getFirst("X-User-Id");
+
+        if (userId != null && !userId.isBlank()) {
+            return userId;
+        }
+
         String clientIp = exchange.getRequest()
                 .getRemoteAddress()
                 .getAddress()
