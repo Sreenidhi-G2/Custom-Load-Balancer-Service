@@ -10,7 +10,8 @@ import java.util.stream.Collectors;
 @Component
 public class ServiceRegistry {
 
-    private final List<BackendServer> servers = new CopyOnWriteArrayList<>();
+    private final List<BackendServer> servers =
+            new CopyOnWriteArrayList<>();
 
     public ServiceRegistry() {
 
@@ -30,11 +31,19 @@ public class ServiceRegistry {
         ));
     }
 
-    public List<BackendServer> getHealthyServers() {
+    public void registerServer(BackendServer server) {
+        servers.add(server);
+    }
 
+    public void removeServer(String serverId) {
+        servers.removeIf(server ->
+                server.getId().equals(serverId));
+    }
+
+    public List<BackendServer> getHealthyServers() {
         return servers.stream()
                 .filter(BackendServer::isHealthy)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public List<BackendServer> getAllServers() {
