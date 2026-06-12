@@ -16,33 +16,32 @@ public class ConsistentHashingStrategy implements LoadBalancingStrategy {
 
     private static final int VIRTUAL_NODES = 100;
 
-    private final ServiceRegistry serviceRegistry;
+//    private final ServiceRegistry serviceRegistry;
+    private volatile SortedMap<Integer, BackendServer> hashRing = new TreeMap<>();
 
-    public ConsistentHashingStrategy(ServiceRegistry serviceRegistry) {
-        this.serviceRegistry = serviceRegistry;
+//    public ConsistentHashingStrategy(ServiceRegistry serviceRegistry) {
+//        this.serviceRegistry = serviceRegistry;
+//        this.hashRing = buildHashRing(serviceRegistry.getHealthyServers()); // build once at startup
+//    }
+
+    public void rebuildRing(List<BackendServer> servers) {  // ← accepts the list directly
+        this.hashRing = buildHashRing(servers);
     }
+
 
     @Override
     public BackendServer selectServer(ServerWebExchange exchange) {
+        SortedMap<Integer, BackendServer> ring = this.hashRing; // read once (volatile snapshot)
 
-        List<BackendServer> healthyServers = serviceRegistry.getHealthyServers();
-
-        if (healthyServers.isEmpty()) {
+        if (ring.isEmpty()) {
             throw new RuntimeException("No healthy backend servers available");
         }
-
-        SortedMap<Integer, BackendServer> hashRing = buildHashRing(healthyServers);
 
         String requestKey = getRequestKey(exchange);
         int requestHash = hash(requestKey);
 
-        SortedMap<Integer, BackendServer> tailMap = hashRing.tailMap(requestHash);
-
-        if (tailMap.isEmpty()) {
-            return hashRing.get(hashRing.firstKey());
-        }
-
-        return tailMap.get(tailMap.firstKey());
+        SortedMap<Integer, BackendServer> tailMap = ring.tailMap(requestHash);
+        return tailMap.isEmpty() ? ring.get(ring.firstKey()) : tailMap.get(tailMap.firstKey());
     }
 
     private SortedMap<Integer, BackendServer> buildHashRing(List<BackendServer> servers) {
