@@ -1,11 +1,18 @@
 package com.sreenidhi.load.balancer.service.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.concurrent.atomic.AtomicInteger;
 
+@Getter
 public class BackendServer {
 
+    // getters
     private final String id;
     private final String baseUrl;
+    //setters
+    @Setter
     private volatile boolean healthy;
     private final AtomicInteger activeConnections;
 
@@ -14,26 +21,6 @@ public class BackendServer {
         this.baseUrl = baseUrl;
         this.healthy = true;
         this.activeConnections = new AtomicInteger(0);
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public String getBaseUrl() {
-        return baseUrl;
-    }
-
-    public boolean isHealthy() {
-        return healthy;
-    }
-
-    public void setHealthy(boolean healthy) {
-        this.healthy = healthy;
-    }
-
-    public AtomicInteger getActiveConnections() {
-        return activeConnections;
     }
 
     public void incrementConnections() {
