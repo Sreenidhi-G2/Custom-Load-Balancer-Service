@@ -1,89 +1,58 @@
 # Load Balancer Service
 
-A custom Layer 7 Load Balancer built from scratch using Spring Boot and WebFlux to understand how modern distributed systems route traffic across backend services.
+A high-performance Layer 7 Load Balancer built with Spring Boot WebFlux to explore distributed systems concepts such as request routing, health monitoring, and fault tolerance.
 
-## Why This Project?
+## Features
 
-Most developers use load balancers such as NGINX, HAProxy, Envoy, or cloud-managed solutions without understanding how they work internally.
+- Least Connections load balancing
+- Consistent Hashing with virtual nodes
+- Reactive request proxying using Spring WebFlux
+- Automatic backend health monitoring
+- Dynamic exclusion of unhealthy servers
+- Non-blocking architecture using WebClient
 
-This project aims to implement the core building blocks of a production-grade load balancer from first principles and explore concepts such as:
+## Benchmark Results
 
-* Request routing
-* Load balancing algorithms
-* Service discovery
-* Health monitoring
-* Rate limiting
-* Concurrency handling
-* Observability and metrics
+### 1000 Concurrent Users
+- Throughput: **12,615 requests/sec**
+- Requests Served: **378,936**
+- Average Latency: **68ms**
+- Failure Rate: **0.40%**
 
-## Current Features
-
-* Backend server registry
-* Least Connections load balancing
-* Consistent Hashing with virtual nodes
-* Thread-safe connection tracking
-* Spring WebFlux integration
-* Multiple backend server support
-
-## Architecture
-
-```text
-Client
-   │
-   ▼
-Load Balancer (Spring Boot)
-   │
-   ▼
-Load Balancing Strategy
-   ├── Least Connections
-   └── Consistent Hashing
-   │
-   ▼
-Backend Servers
-   ├── Backend-1
-   ├── Backend-2
-   └── Backend-3
-```
+### 5000 Concurrent Users
+- Throughput: **7,635 requests/sec**
+- Requests Served: **240,539**
+- Average Latency: **54ms**
+- Failure Rate: **1.95%**
 
 ## Tech Stack
 
-* Java 21+
-* Spring Boot
-* Spring WebFlux
-* Gradle
+- Java 23
+- Spring Boot
+- Spring WebFlux
+- Reactor Netty
+- WebClient
+- Lombok
+- k6
 
-## Planned Features
+## Phase 2 Roadmap
 
-* Reverse proxy routing
-* Active health checks
-* Dynamic service discovery
-* Rate limiting
-* Request analytics
-* Metrics and monitoring
-* Prometheus integration
-* Grafana dashboards
-* Docker deployment
-* Kubernetes deployment
-* Benchmarking and performance testing
+- Dynamic Service Discovery
+- Circuit Breaker Support
+- Metrics & Monitoring (Actuator)
+- Prometheus & Grafana Integration
+- Docker & Kubernetes Deployment
+- Optimized Consistent Hashing Ring
 
 ## Learning Goals
 
-This project is being built as a hands-on exploration of:
+This project is focused on understanding:
+- Load Balancing Algorithms
+- Reactive Systems
+- Concurrent Programming
+- Health Monitoring
+- Fault Tolerance
+- Distributed Systems Design
 
-* Distributed Systems
-* Backend Infrastructure
-* Network Routing
-* Scalability
-* Fault Tolerance
-* Concurrent Programming
-* System Design
+---
 
-## Status
-
-🚧 Currently under active development.
-
-The goal is to gradually evolve this project from a simple load balancer into a production-inspired traffic management system.
-
-## Author
-
-Sreenidhi G

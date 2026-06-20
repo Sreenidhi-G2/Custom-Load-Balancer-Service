@@ -44,9 +44,6 @@ public class ProxyController {
         String targetUrl =
                 server.getBaseUrl() + "/api/test";
 
-        System.out.println(
-                "Routing request to: " + server.getId()
-        );
 
         return webClient
                 .get()
