@@ -40,6 +40,7 @@ public class ProxyController {
                 strategy.selectServer(exchange);
 
         server.getActiveConnections().incrementAndGet();
+        server.getTotalRequests().incrementAndGet();
 
         String targetUrl =
                 server.getBaseUrl() + "/api/test";
