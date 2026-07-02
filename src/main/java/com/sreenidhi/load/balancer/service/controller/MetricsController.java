@@ -21,8 +21,10 @@ public class MetricsController {
 
         List<Map<String, Object>> response = new ArrayList<>();
 
-        for (BackendServer server :
-                serviceRegistry.getAllServers()) {
+        for (Map.Entry<String  , BackendServer> entry :
+                serviceRegistry.getAllServers().entrySet()) {
+
+            BackendServer server = entry.getValue();
 
             Map<String, Object> serverMetrics =
                     new HashMap<>();

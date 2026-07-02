@@ -37,16 +37,14 @@ public class HealthCheckService {
     }
 
 
-
     @Scheduled(fixedRate = 5000)
     public void checkServers() {
 
         serviceRegistry.getAllServers()
+                .values()
                 .forEach(this::checkServer);
 
-//        System.out.println(
-//                "Healthy servers: " +
-//                        serviceRegistry.getHealthyServers().size());
+
     }
 
 
