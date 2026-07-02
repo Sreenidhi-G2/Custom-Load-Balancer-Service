@@ -1,7 +1,9 @@
 package com.sreenidhi.load.balancer.service.algorithm;
 
+import com.sreenidhi.load.balancer.service.events.RegistryChangedEvent;
 import com.sreenidhi.load.balancer.service.model.BackendServer;
 import com.sreenidhi.load.balancer.service.registry.ServiceRegistry;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 
@@ -16,13 +18,9 @@ public class ConsistentHashingStrategy implements LoadBalancingStrategy {
 
     private static final int VIRTUAL_NODES = 100;
 
-//    private final ServiceRegistry serviceRegistry;
     private volatile SortedMap<Integer, BackendServer> hashRing = new TreeMap<>();
 
-//    public ConsistentHashingStrategy(ServiceRegistry serviceRegistry) {
-//        this.serviceRegistry = serviceRegistry;
-//        this.hashRing = buildHashRing(serviceRegistry.getHealthyServers()); // build once at startup
-//    }
+
 
     public void rebuildRing(List<BackendServer> servers) {  // ← accepts the list directly
         this.hashRing = buildHashRing(servers);
@@ -42,6 +40,13 @@ public class ConsistentHashingStrategy implements LoadBalancingStrategy {
 
         SortedMap<Integer, BackendServer> tailMap = ring.tailMap(requestHash);
         return tailMap.isEmpty() ? ring.get(ring.firstKey()) : tailMap.get(tailMap.firstKey());
+    }
+
+    @EventListener
+    public void onRegistryChanged(RegistryChangedEvent event) {
+        System.out.println("Registry Changed!");
+        rebuildRing(event.getHealthyServers());
+
     }
 
     private SortedMap<Integer, BackendServer> buildHashRing(List<BackendServer> servers) {
