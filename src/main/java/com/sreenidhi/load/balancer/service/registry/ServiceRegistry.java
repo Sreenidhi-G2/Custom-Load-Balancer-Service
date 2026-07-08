@@ -28,8 +28,11 @@ public class ServiceRegistry {
         servers.put(server.getId() ,  server);
         eventPublisher.publishEvent(new RegistryChangedEvent(getHealthyServers()));
 
-        System.out.println("Registered Servers:");
         servers.values().forEach(System.out::println);
+    }
+
+    public void publishRegistryChangedEvent() {
+        eventPublisher.publishEvent(new RegistryChangedEvent(getHealthyServers()));
     }
 
     public void removeServer(String serverId) {

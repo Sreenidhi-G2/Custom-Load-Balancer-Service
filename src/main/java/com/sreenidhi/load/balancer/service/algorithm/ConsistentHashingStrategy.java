@@ -44,8 +44,9 @@ public class ConsistentHashingStrategy implements LoadBalancingStrategy {
 
     @EventListener
     public void onRegistryChanged(RegistryChangedEvent event) {
-        System.out.println("Registry Changed!");
+
         rebuildRing(event.getHealthyServers());
+
 
     }
 

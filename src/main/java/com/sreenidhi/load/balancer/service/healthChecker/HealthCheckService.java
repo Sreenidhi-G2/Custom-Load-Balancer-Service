@@ -11,7 +11,6 @@ public class HealthCheckService {
 
     private final ServiceRegistry serviceRegistry;
     private final WebClient webClient;
-    int count = 0;
     public HealthCheckService(ServiceRegistry serviceRegistry , WebClient webClient) {
         this.serviceRegistry = serviceRegistry;
         this.webClient = webClient;
@@ -25,20 +24,33 @@ public class HealthCheckService {
                 .bodyToMono(String.class)
                 .timeout(Duration.ofSeconds(2))
                 .doOnSuccess(response -> {
-                    count = count + 1;
-                    server.setHealthy(true);
+
+                    if (!server.isHealthy()) {
+                        server.setHealthy(true);
+                        serviceRegistry.publishRegistryChangedEvent();
+
+                    }
+
                 })
                 .doOnError(error -> {
-                    server.setHealthy(false);
-                })
-                .subscribe();
+                System.out.println("Entered DO on error");
+                    if (server.isHealthy()) {
+                        server.setHealthy(false);
+                        serviceRegistry.publishRegistryChangedEvent();
+                    }
 
+                }).subscribe(
+                        v -> {},
+                        err -> System.out.println("Unhandled error in health check pipeline: " + err)
+                );
 
     }
 
 
     @Scheduled(fixedRate = 5000)
     public void checkServers() {
+
+
 
         serviceRegistry.getAllServers()
                 .values()
