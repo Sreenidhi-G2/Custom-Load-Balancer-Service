@@ -10,6 +10,9 @@ A high-performance Layer 7 Load Balancer built with Spring Boot WebFlux to explo
 - Automatic backend health monitoring
 - Dynamic exclusion of unhealthy servers
 - Non-blocking architecture using WebClient
+- Dynamic Service Discovery
+- Prometheus & Grafana Integration
+- Optimized Consistent Hashing Ring
 
 ## Benchmark Results
 
@@ -37,12 +40,10 @@ A high-performance Layer 7 Load Balancer built with Spring Boot WebFlux to explo
 
 ## Phase 2 Roadmap
 
-- Dynamic Service Discovery
 - Circuit Breaker Support
 - Metrics & Monitoring (Actuator)
-- Prometheus & Grafana Integration
 - Docker & Kubernetes Deployment
-- Optimized Consistent Hashing Ring
+
 
 ## Learning Goals
 
